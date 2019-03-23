@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  server:
+    build: ./labellab-server
+    ports:
+      - 7000:7000
+    links:
+      - mongo
+  
+  mongo:
+    image: mongo
+      
+  client:
+    build: ./labellab-client
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=development
