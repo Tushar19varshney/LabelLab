@@ -3,9 +3,7 @@ const initialState = {
 	isAuthenticating:false,
 	statusText:"",
 	details: {
-		name:"",
-		username:"",
-		email:""
+		email:"",
 	},
 	error:false,
 	err_field:""
@@ -25,9 +23,7 @@ const auth = ( state = initialState, action) => {
 			isAuthenticating:false,
 			statusText:"You are logged in successfully!",
 			details:{
-				name: action.payload.name,
-				username:action.payload.username,
-				email: action.payload.email
+				email: action.payload.email,
 			}
 		}
 	case "LOGIN_USER_FAILURE":
@@ -35,7 +31,7 @@ const auth = ( state = initialState, action) => {
 			...state,
 			isAuthenticated:false,
 			isAuthenticating:false,
-			statusText: action.payload,
+			statusText: action.payload === "Unauthorized" ? "Email is not registered" : null,
 			error:true,
 			err_field: action.other
 		}
@@ -44,10 +40,8 @@ const auth = ( state = initialState, action) => {
 			...state,
 			isAuthenticated: false,
 			isAuthenticating:false,
-			statusText:"YOu have been successfully logged out",
+			statusText:"You have been successfully logged out",
 			details:{
-				name:"",
-				username:"",
 				email:""
 			}
 		}

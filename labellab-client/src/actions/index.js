@@ -13,15 +13,42 @@ export const setData = (data,callback)=>{
 		})
 		callback()
 	}
-} 
+}
+
+export const fetchUser = ()=>{
+	return dispatch => {
+		dispatch({
+			type: "SET_USER_DATA_REQUEST"
+		})
+		axios({ method: "GET",
+			url: "http://localhost:7000/api/users/info",
+			headers:{
+				"authorization":localStorage.getItem("user")
+			},
+			responseType: "json"})
+			.then(res => {
+				dispatch({
+					type: "SET_USER_DATA_SUCCESS",
+					payload: res.data.body
+				})
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "SET_USER_DATA_FAILURE",
+						payload: err.response.statusText,
+					})
+				}
+			})
+	}
+}
 
 export const userlogin = (data, callback) =>{
 	return dispatch =>{
 		dispatch({
 			type: "LOGIN_USER_REQUEST"
 		})
-		axios
-		({ method: "POST",
+		axios({ method: "POST",
 			url: "http://localhost:7000/api/auth/login",
 			data:data,
 			responseType: "json"})
@@ -38,8 +65,8 @@ export const userlogin = (data, callback) =>{
 				if(err.response){
 					dispatch({
 						type: "LOGIN_USER_FAILURE",
-						payload: err.response.data.msg,
-						other:err.response.data.err_field
+						payload: err.response.statusText,
+						other:"email"
                 
 					})
 				}
@@ -65,8 +92,7 @@ export const userregister=(data,callback)=>{
 		dispatch({
 			type: "REGISTER_USER_REQUEST"
 		})
-		axios
-		({ method: "POST",
+		axios({ method: "POST",
 			url: "http://localhost:7000/api/auth/register",
 			data:data,
 			responseType: "json"})
@@ -88,4 +114,32 @@ export const userregister=(data,callback)=>{
 			})
 
 	}        
+}
+
+export const uploadImage = (data,callback)=>{
+	return dispatch=>{
+		dispatch({
+			type: "UPLOAD_IMAGE_REQUEST"
+		})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/upload_image",
+			data:data,
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			responseType: "json"})
+			.then(() => {
+				dispatch({
+					type: "UPLOAD_IMAGE_SUCCESS",
+				})
+				callback("true")
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "UPLOAD_IMAGE_FAILURE",
+					})
+				}
+			})
+	}
 }

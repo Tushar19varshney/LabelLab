@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "fs": "0.0.1-security",
     "jwt-decode": "^2.2.0",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",

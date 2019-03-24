@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {Sidebar,Segment,Button,Icon,Menu,Image,Header, Container,Input} from 'semantic-ui-react'
 import { connect } from "react-redux"
-import {setData,logout} from "../actions/index"
+import {setData,logout,uploadImage,fetchUser} from "../actions/index"
 import jwt_decode from "jwt-decode"
 import home from "./css/home.css"
 
@@ -9,19 +9,38 @@ class HomeIndex extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-            visible:false
+            visible:false,
+            file:'',
+            image:'',
+            max_size_error:''
          }
     }
     componentDidMount(){
         if(localStorage.getItem('user')){
-            if(!this.props.details.name || !this.props.details.username || !this.props.details.email ){
-                let data = jwt_decode(localStorage.getItem('user'))
-                this.props.setData(data,this.callback)
-            }
+            this.props.fetchUser()
         }
         else{
             this.props.history.push('/login')
         }
+    }
+
+    onSubmit = (e) => {
+        e.preventDefault();
+        let {file,image} = this.state
+        if (file && file.size > 101200) {
+            this.setState({
+                max_size_error:"max sized reached"
+            })
+        } else {
+          let data = {
+            image: image,
+            format: file.type
+          }
+          this.props.uploadImage(data,this.imageCallback)
+        }
+    }
+    imageCallback=(msg)=>{
+        this.props.fetchUser()
     }
     handleImageChange = (e) => {
         e.preventDefault();
@@ -29,6 +48,10 @@ class HomeIndex extends Component {
         let file = e.target.files[0];
         reader.onloadend = () => {
             document.getElementById('file-name-display').innerHTML = "Filename : " + file.name
+            this.setState({
+                image: reader.result,
+                file:file
+            })
         }
         reader.readAsDataURL(file)
     }
@@ -51,6 +74,7 @@ class HomeIndex extends Component {
     callback(){
 
     }
+
     render() { 
         const {visible} = this.state
         return ( 
@@ -71,10 +95,14 @@ class HomeIndex extends Component {
                             <Header textAlign="center" as='h2' content='LabelLab' />
                         </Menu.Item>
                         <Menu.Item>
-                            <Image centered src="https://react.semantic-ui.com/images/wireframe/square-image.png" size="small" circular />
+                        {this.props.isfetching ? <h4>LOADING</h4> :
+                                    this.props.user && this.props.user.image ?
+                                    <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}`} size="small" />
+                                : null
+                                }
                         </Menu.Item>
                         <Menu.Item>
-                            <Header textAlign="center" as='h3' content={this.props.details.username} />
+                            <Header textAlign="center" as='h3' content={this.props.user.username} />
                         </Menu.Item>
                     </Menu>
                         
@@ -91,10 +119,14 @@ class HomeIndex extends Component {
                             </Button>
                             <Menu.Menu position="right">
                                 <Menu.Item fitted styleName='home.borderless'>
-                                    <Image centered src="https://react.semantic-ui.com/images/wireframe/square-image.png" size="mini" circular />
+                                    {this.props.isfetching ? <h4>LOADING</h4> :
+                                    this.props.user && this.props.user.image ?
+                                    <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}`} size="mini" />
+                                : null
+                                }
                                 </Menu.Item>
                                 <Menu.Item >
-                                    <Header textAlign="center" as='h5' content={this.props.details.username} />
+                                    <Header textAlign="center" as='h5' content={this.props.user.username} />
                                 </Menu.Item>
                                 <Menu.Item >
                                     <Button onClick={this.handleLogout}>Logout</Button>
@@ -102,9 +134,12 @@ class HomeIndex extends Component {
                             </Menu.Menu>
                         </Menu>
                         </Segment>
+                        <div>{this.props.errors}</div>
+                        <div>{this.state.max_size_error}</div>
                         <Segment>
                             <Input onChange={this.handleImageChange} type="file" />
                             <div id="file-name-display"></div>
+                            <Button onClick={this.onSubmit}>Upload Image</Button>
                         </Segment>
                         </Container>
                     </Sidebar.Pusher>
@@ -117,7 +152,10 @@ class HomeIndex extends Component {
 const mapStateToProps = (state) => {
     return {
         statusText: state.register.statusText,
-        details:state.auth.details
+        details:state.auth.details,
+        user:state.user.userDetails,
+        isfetching:state.user.userActions.isfetching,
+        errors:state.user.userActions.errors
     }
 }
 
@@ -128,7 +166,14 @@ const mapDispatchToProps = dispatch => {
         },
         setData: (data,callback)=>{
             dispatch(setData(data,callback))
+        },
+        uploadImage: (data,callback)=>{
+            dispatch(uploadImage(data,callback))
+        },
+        fetchUser:()=>{
+            dispatch(fetchUser())
         }
+
     }
 }
  
