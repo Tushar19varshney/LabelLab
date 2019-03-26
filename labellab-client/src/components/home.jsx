@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import {setData,logout,uploadImage,fetchUser} from "../actions/index"
 import jwt_decode from "jwt-decode"
 import home from "./css/home.css"
+import ImgLabel from "./img_label"
 
 class HomeIndex extends Component {
     constructor(props) {
@@ -121,7 +122,7 @@ class HomeIndex extends Component {
                                 <Menu.Item fitted styleName='home.borderless'>
                                     {this.props.isfetching ? <h4>LOADING</h4> :
                                     this.props.user && this.props.user.image ?
-                                    <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}`} size="mini" />
+                                    <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}?${Date.now()}`} size="mini" />
                                 : null
                                 }
                                 </Menu.Item>
@@ -141,6 +142,7 @@ class HomeIndex extends Component {
                             <div id="file-name-display"></div>
                             <Button onClick={this.onSubmit}>Upload Image</Button>
                         </Segment>
+                        <ImgLabel />
                         </Container>
                     </Sidebar.Pusher>
                 </Sidebar.Pushable>

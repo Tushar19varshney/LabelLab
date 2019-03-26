@@ -33,7 +33,7 @@ exports.upload_image = function (req, res) {
 		let baseImg = data.img.split(",")[1]
 		let binaryData = new Buffer(baseImg, "base64")
 		let ext = data.format.split("/")[1]
-		let updateData = { image: `${Date.now()}${data.id}.${ext}` }
+		let updateData = { image: `${data.id}.${ext}` }
 		const url = `/public/img/${updateData.image}`
 		require("fs").writeFile(`./public/img/${updateData.image}`, binaryData, function (err) {
 			if (err) {
