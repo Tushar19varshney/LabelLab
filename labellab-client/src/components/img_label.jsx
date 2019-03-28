@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import {connect} from "react-redux"
+import {postLabel} from "../actions/index"
 import {Input} from "semantic-ui-react"
 import "./css/img_label.css"
 
@@ -8,23 +9,23 @@ class ImgLabel extends Component {
 		super(props)
 		this.state = { 
 			image:'',
-			file:''
+			file:'',
+			label:[]
 		 }
 	}
 	componentDidMount(){
-		// var canvas = document.getElementById('canvas');
-		// var ctx = canvas.getContext('2d');
-		// var imageObj = new Image();
-		// var drag = false
-		// imageObj.onload = function() {
-		//   ctx.drawImage(imageObj, 69, 50);
-		// };
-		// imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-		initDraw(document.getElementById('canvas'))
+		initDraw(document.getElementById('canvas'),this.handleLabel,this.handleRemoveLabel)
 		var numRect = 0
 		var buttonTrigger = 0
-
-		function initDraw(canvas) {
+		let tmp_height = ''
+		let tmp_width = ''
+		let coordinates = {
+			startX:0,
+			startY:0,
+			endX:0,
+			endY:0
+		}
+		function initDraw (canvas,addcallback,removecallback) {
 			function setMousePosition(e) {
 				var ev = e || window.event; //Moz || IE
 				if (ev.pageX) { //Moz
@@ -59,18 +60,24 @@ class ImgLabel extends Component {
 			function okClick(){
 				let labelValue = document.getElementById('label'+numRect).value
 				buttonTrigger++
-				
+				addcallback(coordinates,labelValue,numRect)
+				// document.getElementById('label-container'+numRect).style.display = 'none'
 			}
 			function canClick(){
-				console.log(numRect)
-				document.getElementById('label-container'+numRect).remove()
-				document.getElementById('rect'+numRect).remove()
+				let num = this.id.replace( /^\D+/g, '')
+				document.getElementById('label-container'+num).remove()
+				document.getElementById('rect'+num).remove()
 				numRect = numRect - 1
 				buttonTrigger++
+				removecallback(num)
 			}
-		
+			function removeLabelContainer(){
+				// document.getElementById('label-container'+numRect).style.display = 'none'
+			}
+			
 			canvas.onclick = function (e) {
-				if(numRect > 0 && document.getElementById('label'+numRect).value === ''|| buttonTrigger === 1){
+				console.log(numRect)
+				if(numRect > 0 && (document.getElementById('label'+numRect) && document.getElementById('label'+numRect).value) === ''|| buttonTrigger === 1){
 					if(buttonTrigger ===1){
 						console.log("empty")
 						buttonTrigger = buttonTrigger-1
@@ -79,23 +86,49 @@ class ImgLabel extends Component {
 				else{
 					if (element !== null) {
 						numRect = numRect+1
-						console.log(mouse)
-						let tmp_height = element.style.height
-						let tmp_width = element.style.width
+						tmp_height = element.style.height
+						tmp_width = element.style.width
 						element = null;
 						canvas.style.cursor = "default";
 						console.log("finsihed.");
 						let contain = document.createElement('div')
 						contain.className = 'label-container'
 						contain.id = 'label-container'+numRect
-						console.log( parseInt(tmp_width.substring(0,tmp_height.indexOf('p'))), )
+						coordinates.startX = mouse.startX
+						coordinates.startY = mouse.startY
 						if (mouse.x > mouse.startX){
 							contain.style.left = (mouse.startX + parseInt(tmp_width.substring(0,tmp_width.indexOf('p'))) + 5).toString() + 'px'
-							contain.style.top = (mouse.startY + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+							coordinates.endX = mouse.startX + parseInt(tmp_width.substring(0,tmp_width.indexOf('p')))
+							if(mouse.y > mouse.startY){
+								contain.style.top = (mouse.startY + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+								coordinates.endY = mouse.startY + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))
+							}
+							else{
+								contain.style.top = (mouse.y + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+								coordinates.endY = mouse.startY - parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))
+							}
 						}
 						else{
 							contain.style.left = (mouse.x + parseInt(tmp_width.substring(0,tmp_width.indexOf('p'))) + 5).toString() + 'px'
-							contain.style.top = (mouse.y + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+							coordinates.endX = mouse.startX - parseInt(tmp_width.substring(0,tmp_width.indexOf('p')))
+							if(mouse.y > mouse.startY){
+								contain.style.top = (mouse.startY + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+								coordinates.endY = mouse.startY + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))
+							}
+							else{
+								contain.style.top = (mouse.y + parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))).toString() + 'px'
+								coordinates.endY = mouse.startY - parseInt(tmp_height.substring(0,tmp_height.indexOf('p')))
+							}
+						}
+						if(coordinates.startX > coordinates.endX){
+							let temp = coordinates.startX
+							coordinates.startX = coordinates.endX
+							coordinates.endX = temp
+						}
+						if(coordinates.startY > coordinates.endY){
+							let temp = coordinates.startY
+							coordinates.startY = coordinates.endY
+							coordinates.endY = temp
 						}
 						canvas.appendChild(contain)
 						field = document.createElement('input')
@@ -128,68 +161,32 @@ class ImgLabel extends Component {
 				}
 			}
 		}
-		// var canvas = document.getElementById('myCanvas');
-		// var ctx = canvas.getContext('2d');
-		// var imageObj = new Image();
-		// var drag = false
-		// imageObj.onload = function() {
-		//   ctx.drawImage(imageObj, 69, 50);
-		// };
-		// imageObj.src = 'http://www.html5canvastutorials.com/demos/assets/darth-vader.jpg';
-  
-		//   // ctx.globalAlpha = 0.5;
-		//   canvas.addEventListener('mousedown', mouseDown, false);
-		//   canvas.addEventListener('mouseup', mouseUp, false);
-		//   canvas.addEventListener('mousemove', mouseMove, false);
-		//   let {rect,rectStartXArray,rectStartYArray,rectWArray ,rectHArray } = this.state
-
-		//   function mouseDown(e) {
-		// 	rect.startX = e.pageX - this.offsetLeft;
-		// 	rect.startY = e.pageY - this.offsetTop;
-		// 	drag = true;
-		// }
-		// function mouseUp() {
-		// 	console.log("varshney")
-		// 	rectStartXArray[rectStartXArray.length] = rect.startX;
-		// 	rectStartYArray[rectStartYArray.length] = rect.startY;
-		// 	rectWArray[rectWArray.length] = rect.w;
-		// 	rectHArray[rectHArray.length] = rect.h;
-		// 	drag = false;
-		// }
-		
-		// function mouseMove(e) {
-		//   if (drag) {
-		// 		rect.w = (e.pageX - this.offsetLeft) - rect.startX;
-		// 		rect.h = (e.pageY - this.offsetTop) - rect.startY;
-		// 		draw();
-		// 	}
-		
-		// 	//drawOldShapes();
-		// }
-		// function draw() {
-		// 	ctx.beginPath(); 
-		// 	ctx.fillStyle="";
-		// 	ctx.fillRect(rect.startX, rect.startY, rect.w, rect.h);
-		// 	ctx.stroke();
-		// }
-		// function drawOldShapes(){
-		// 	for(var i=0;i<rectStartXArray.length;i++)
-		// 	{
-		// 		if(rectStartXArray[i]!= rect.startX && rectStartYArray[i] != rect.startY && rectWArray[i] != rect.w && rectHArray[i] != rect.h)
-		// 		{
-		// 			ctx.beginPath();
-		// 			ctx.fillStyle="#FF0000";
-		// 			ctx.fillRect(rectStartXArray[i], rectStartYArray[i], rectWArray[i], rectHArray[i]);
-		// 			ctx.stroke();
-		// 		}
-		// 	}
-		// }
-	   
-		   //drawOldShapes();
 	   }
 
+	handleLabel = (coordinates,label,numRect)=>{
+		this.setState(state=>{
+			const lab = state.label.concat({labelno:numRect,coordinates,label})
+			return{
+				label:lab
+			}
+		})
+		console.log(this.state)
+	}
+	handleRemoveLabel = (num)=>{
+		this.setState(state=>{
+			state.label.map((i,index)=>{
+				console.log(i.labelno)
+			})
+			// return{
+			// 	label:lab
+			// }
+		})
+		console.log(this.state)
+	}
 
-
+	handleLabelSubmit = ()=>{
+		this.props.postLabel(this.state.label)
+	}
 
 
 	handleImageChange = (e) => {
@@ -209,9 +206,11 @@ class ImgLabel extends Component {
 	render() { 
 		return ( 
 			<div>
+				
 				{/* <Input onChange={this.handleImageChange} type="file" /> */}
 				{/* <canvas id="myCanvas" width="500 " height="400"></canvas> */}
 				<div id="canvas"></div>
+				<button onClick={this.handleLabelSubmit}>Submit</button>
 			</div>
 			
 		)
@@ -224,7 +223,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = dispatch => {
 	return {
-
+		postLabel : (data)=>{
+			return dispatch(postLabel(data))
+		}
 	}
 }
  
