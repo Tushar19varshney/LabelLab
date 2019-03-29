@@ -16,29 +16,33 @@ export const setData = (data,callback)=>{
 }
 
 export const postLabel = (data)=>{
+	
 	return dispatch =>{
+		
 		dispatch({
 			type:"POST_LABEL_REQUEST"
 		})
-		// axios({ method: "POST",
-		// 	url: "http://localhost:7000/api/users/upload_label",
-		// 	data:data,
-		// 	headers: {
-		// 		"authorization" : localStorage.getItem("user")
-		// 	},
-		// 	responseType: "json"})
-		// 	.then(() => {
-		// 		dispatch({
-		// 			type: "POST_LABEL_SUCCESS",
-		// 		})
-		// 	})
-		// 	.catch(err => {
-		// 		if(err.response){
-		// 			dispatch({
-		// 				type: "POST_LABEL_FAILURE",
-		// 			})
-		// 		}
-		// 	})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/postlabel",
+			data:data,
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			responseType: "json"})
+			.then((res) => {
+				dispatch({
+					type: "POST_LABEL_SUCCESS",
+					payload:res.data
+				})
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "POST_LABEL_FAILURE",
+						payload:err.response
+					})
+				}
+			})
 	}
 }
 

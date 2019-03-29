@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
+import { Link } from "react-router-dom"
 import {Sidebar,Segment,Button,Icon,Menu,Image,Header, Container,Input} from 'semantic-ui-react'
 import { connect } from "react-redux"
 import {setData,logout,uploadImage,fetchUser} from "../actions/index"
-import jwt_decode from "jwt-decode"
 import home from "./css/home.css"
-import ImgLabel from "./img_label"
 
 class HomeIndex extends Component {
     constructor(props) {
@@ -142,7 +141,11 @@ class HomeIndex extends Component {
                             <div id="file-name-display"></div>
                             <Button onClick={this.onSubmit}>Upload Image</Button>
                         </Segment>
-                        <ImgLabel />
+                            <Link to="/test">
+                                <Button>
+                                    Click to open tool
+                                </Button>
+                            </Link>
                         </Container>
                     </Sidebar.Pusher>
                 </Sidebar.Pushable>

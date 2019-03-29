@@ -27,4 +27,9 @@ router.get(
 	requireAuth,
 	actControllers.userInfo)
 
+router.post(
+	"/postlabel",
+	requireAuth,
+	actControllers.postLabel)
+
 module.exports = router
