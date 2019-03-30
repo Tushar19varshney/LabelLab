@@ -1,6 +1,7 @@
 const bcrypt = require("bcryptjs")
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
+const Image = require("./image")
 
 // Create Schema
 const UserSchema = new Schema({
@@ -26,7 +27,12 @@ const UserSchema = new Schema({
 	},
 	image: {
 		type: String
-	}
+	},
+	label:[{
+		type: Schema.Types.ObjectId, 
+		ref: "Image"
+	}]
+	
 })
 UserSchema.pre("save", function (next) {
 	var newUser = this
@@ -47,4 +53,4 @@ UserSchema.methods.comparePassword = function (password, callback) {
 		callback(null, isMatch)
 	})
 }
-module.exports = mongoose.model("users", UserSchema)
+module.exports = mongoose.model("User", UserSchema)

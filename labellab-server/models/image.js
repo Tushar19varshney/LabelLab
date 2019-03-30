@@ -1,6 +1,6 @@
-const bcrypt = require("bcryptjs")
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
+const User = require("./user")
 
 
 var CoordinateSchema = new Schema({
@@ -33,8 +33,9 @@ var LabelSchema = new Schema({
 
 
 const ImageSchema = new Schema({
-	user_id:{
-		type: Schema.Types.ObjectId, ref: "User" 
+	user:{
+		type: Schema.Types.ObjectId, 
+		ref: "User"
 	},
 	image:{
 		type:String,
@@ -46,4 +47,5 @@ const ImageSchema = new Schema({
 	},
 	labels:[LabelSchema]
 })
-module.exports = mongoose.model("image", ImageSchema)
+
+module.exports = mongoose.model("Image", ImageSchema)

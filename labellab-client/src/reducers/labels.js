@@ -1,18 +1,40 @@
 const initialState = {
 	labelActions:{
 		isposting:false,
-		error:""
+		error:"",
+		isfetching:false
 	},
-	labelDetails:{
-		image:"",
-		labels:{
-       
-		}
+	images:{
 	}
 }
 
 const user = (state=initialState,action)=>{
 	switch(action.type){
+
+	case "SET_LABEL_DATA_REQUEST":
+		return {
+			...state,
+			labelActions:{
+				isfetching:true
+			}
+		}
+	case "SET_LABEL_DATA_FAILURE":
+		return {
+			...state,
+			labelActions:{
+				isfetching:false,
+				error: "Something went wrong!"
+			}
+		}
+	case "SET_LABEL_DATA_SUCCESS":
+		return {
+			...state,
+			images:action.payload,
+			labelActions:{
+				isfetching:false
+			}
+		}
+
 	case "POST_LABEL_REQUEST":
 		return {
 			...state,
@@ -31,12 +53,9 @@ const user = (state=initialState,action)=>{
 	case "POST_LABEL_SUCCESS":
 		return {
 			...state,
-			labelDetails:{
-				image:action.payload.image_id,
-				labels:action.payload.labels
-			},
 			labelActions:{
-				isposting:false
+				isposting:false,
+				error:"Successfully submitted"
 			}
 		}
 	default:

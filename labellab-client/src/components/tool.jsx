@@ -221,6 +221,7 @@ class ToolIndex extends Component {
 	render() { 
 		return ( 
 			<div>
+				{this.props.actions.error}
 				{this.state.max_size_error}
 				{this.state.image ?
 				<div style={{
@@ -235,7 +236,9 @@ class ToolIndex extends Component {
 }
 const mapStateToProps = (state) => {
 	return {
+		actions: state.labels.labelActions
 	}
+
 }
 
 const mapDispatchToProps = dispatch => {

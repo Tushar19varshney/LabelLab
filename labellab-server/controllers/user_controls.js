@@ -25,6 +25,27 @@ exports.userInfo = function (req, res) {
 		})
 }
 
+exports.labelData = function (req, res) {
+	Image.find({
+		user:req.user.id
+	})
+		.select("image labels date")
+		.exec(function (err, user) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			if (!user) {
+				return res.status(400).send({ success: false, msg: "User not found" })
+			}else {
+				return res.json({ success: true, msg: "User Data Found", body: user })
+			}
+		})
+}
+
 exports.upload_image = function (req, res) {
 	if (req && req.body && req.body.image && req.body.format) {
 		let data = {
@@ -77,13 +98,14 @@ exports.postLabel = function (req,res){
 		// 		if (err) console.log(err)
 		// 	})
 		// }
-		fs.writeFile(`./public/uploads/${updateData.image}`, binaryData, function (err) {
+		fs.writeFile(`./public/uploads/${updateData.image}`, binaryData, async (err) => {
 			if (err) {
 				return res.status(400).send({ success: false, msg: err })
 			} else {
-				console.log(updateData)
+				const user = await User.findById(req.user.id)
+				console.log(user)
 				const newImage = new Image({
-					user_id:req.user.id,
+					user:user,
 					image:updateData.image,
 					labels:data.labels
 				})

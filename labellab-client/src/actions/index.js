@@ -15,6 +15,34 @@ export const setData = (data,callback)=>{
 	}
 }
 
+export const setlabelData = ()=>{
+	return dispatch=>{
+		dispatch({
+			type: "SET_LABEL_DATA_REQUEST"
+		})
+		axios({ method: "GET",
+			url: "http://localhost:7000/api/users/setlabeldata",
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			responseType: "json"})
+			.then((res) => {
+				dispatch({
+					type: "SET_LABEL_DATA_SUCCESS",
+					payload: res.data.body
+				})
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "SET_LABEL_DATA_FAILURE",
+						payload:err.response
+					})
+				}
+			})
+	}
+}
+
 export const postLabel = (data)=>{
 	
 	return dispatch =>{

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 import {Sidebar,Segment,Button,Icon,Menu,Image,Header, Container,Input} from 'semantic-ui-react'
 import { connect } from "react-redux"
 import {setData,logout,uploadImage,fetchUser} from "../actions/index"
+import LabelPreview from "./labelpreview"
 import home from "./css/home.css"
 
 class HomeIndex extends Component {
@@ -146,6 +147,10 @@ class HomeIndex extends Component {
                                     Click to open tool
                                 </Button>
                             </Link>
+                            <div>
+                                <Header textAlign="center" as="h3" content="Previous Works" />
+                                <LabelPreview />
+                            </div>
                         </Container>
                     </Sidebar.Pusher>
                 </Sidebar.Pushable>

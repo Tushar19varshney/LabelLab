@@ -32,4 +32,9 @@ router.post(
 	requireAuth,
 	actControllers.postLabel)
 
+router.get(
+	"/setlabeldata",
+	requireAuth,
+	actControllers.labelData)
+
 module.exports = router
