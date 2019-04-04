@@ -1,16 +1,12 @@
 const mongoose = require("mongoose")
 const Schema = mongoose.Schema
 
-const ImageSchema = new Schema({
-	project:{
+const ProjectSchema = new Schema({
+	user:{
 		type: Schema.Types.ObjectId, 
-		ref: "Project"
+		ref: "User"
 	},
-	image_name:{
-		type:String,
-		required:true
-	},
-	image_url:{
+	project_name:{
 		type:String,
 		required:true
 	},
@@ -18,11 +14,10 @@ const ImageSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	label:[{
+	image:[{
 		type: Schema.Types.ObjectId, 
-		ref: "Label"
+		ref: "Image"
 	}]
 })
 
-module.exports = mongoose.model("Image", ImageSchema)
-
+module.exports = mongoose.model("Project", ProjectSchema)

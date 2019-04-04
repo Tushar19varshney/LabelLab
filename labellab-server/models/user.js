@@ -25,12 +25,12 @@ const UserSchema = new Schema({
 		type: Date,
 		default: Date.now
 	},
-	image: {
+	profile_image: {
 		type: String
 	},
-	label:[{
+	project:[{
 		type: Schema.Types.ObjectId, 
-		ref: "Image"
+		ref: "Project"
 	}]
 	
 })
