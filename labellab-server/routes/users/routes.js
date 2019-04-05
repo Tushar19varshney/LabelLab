@@ -32,9 +32,19 @@ router.post(
 	requireAuth,
 	actControllers.postLabel)
 
-router.get(
-	"/setlabeldata",
+router.post(
+	"/submitimage",
 	requireAuth,
-	actControllers.labelData)
+	actControllers.submitImage)
+
+router.post(
+	"/setimagedata",
+	requireAuth,
+	actControllers.imageData)
+
+router.post(
+	"/initproject",
+	requireAuth,
+	actControllers.initializeProject) 
 
 module.exports = router

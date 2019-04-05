@@ -2,7 +2,11 @@ const initialState = {
 	userActions:{
 		isuploading:false,
 		isfetching:false,
+		isinitializing:false,
 		errors:""
+	},
+	userProjects:{
+
 	},
 	userDetails:{
 		name:"",
@@ -26,7 +30,7 @@ const user = (state=initialState,action)=>{
 			...state,
 			userActions:{
 				isuploading:false,
-				error: "Something went wrong!"
+				errors: "Something went wrong!"
 			}
 		}
 	case "UPLOAD_IMAGE_SUCCESS":
@@ -53,7 +57,7 @@ const user = (state=initialState,action)=>{
 				name:action.payload.name,
 				email:action.payload.email,
 				username:action.payload.username,
-				image:action.payload.image
+				image:action.payload.profile_image
 			}
 		}
 	case "SET_USER_DATA_FAILURE":
@@ -61,6 +65,40 @@ const user = (state=initialState,action)=>{
 			...state,
 			userActions:{
 				errors:action.payload
+			}
+		}
+	case "INITIALIZE_PROJECT_REQUEST":
+		return {
+			...state,
+			userActions:{
+				isinitializing:true
+			}
+		}
+	case "INITIALIZE_PROJECT_FAILURE":
+		return {
+			...state,
+			userActions:{
+				isinitializing:false,
+				errors: action.payload
+			}
+		}
+	case "INITIALIZE_PROJECT_SUCCESS":
+		return {
+			...state,
+			userActions:{
+				isinitializing:false,
+			},
+			userProjects:{
+				project_name:action.payload.project_name,
+				images:action.payload.image
+			}
+		}
+	case "SET_PROJECT_NAME":
+		return {
+			...state,
+			userProjects:{
+				project_name:action.payload.project_name,
+				images:action.payload.image
 			}
 		}
 	default:

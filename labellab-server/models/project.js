@@ -1,9 +1,8 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
-const ProjectSchema = new Schema({
+const ProjectSchema = new mongoose.Schema({
 	user:{
-		type: Schema.Types.ObjectId, 
+		type: mongoose.Schema.Types.ObjectId, 
 		ref: "User"
 	},
 	project_name:{
@@ -15,7 +14,7 @@ const ProjectSchema = new Schema({
 		default: Date.now
 	},
 	image:[{
-		type: Schema.Types.ObjectId, 
+		type: mongoose.Schema.Types.ObjectId, 
 		ref: "Image"
 	}]
 })

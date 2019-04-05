@@ -17,3 +17,24 @@
 .label-input{
     /* position: absolute; */
 }
+.file-input{
+    width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+.img-label-parent{
+    display: flex;
+    flex-direction: row;
+}
+.tool-images{
+    padding:10px;
+    width: 25%;
+    border-left:1px solid black; 
+    height: 100vh;
+}
+.tool-parent{
+    width: 75%;
+}

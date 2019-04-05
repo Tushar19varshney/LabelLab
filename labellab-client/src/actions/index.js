@@ -15,6 +15,36 @@ export const setData = (data,callback)=>{
 	}
 }
 
+export const initProject = (data,callback)=>{
+	return dispatch=>{
+		dispatch({
+			type: "INITIALIZE_PROJECT_REQUEST"
+		})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/initproject",
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			data:data,
+			responseType: "json"})
+			.then((res) => {
+				dispatch({
+					type: "INITIALIZE_PROJECT_SUCCESS",
+					payload: res.data.body
+				})
+				callback(res.data.body._id)
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "INITIALIZE_PROJECT_FAILURE",
+						payload:err.response.data.msg
+					})
+				}
+			})
+	}
+}
+
 export const setlabelData = ()=>{
 	return dispatch=>{
 		dispatch({
@@ -202,3 +232,67 @@ export const uploadImage = (data,callback)=>{
 			})
 	}
 }
+
+export const setImageData = (data)=>{
+	return dispatch=>{
+		dispatch({
+			type: "SET_IMAGE_DATA_REQUEST"
+		})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/setimagedata",
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			data:data,
+			responseType: "json"})
+			.then((res) => {
+				dispatch({
+					type: "SET_IMAGE_DATA_SUCCESS",
+					payload: res.data.body
+				})
+				dispatch({
+					type:"SET_PROJECT_NAME",
+					payload:res.data.body[0]
+				})
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "SET_IMAGE_DATA_FAILURE",
+						payload:err.response
+					})
+				}
+			})
+	}
+}
+
+export const submitImage = (data,callback)=>{
+	return dispatch=>{
+		dispatch({
+			type: "POST_IMAGE_REQUEST"
+		})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/submitimage",
+			headers: {
+				"authorization" : localStorage.getItem("user")
+			},
+			data:data,
+			responseType: "json"})
+			.then((res) => {
+				dispatch({
+					type: "POST_IMAGE_SUCCESS",
+					payload: res.data.body
+				})
+				callback()
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "POST_IMAGE_FAILURE",
+						payload:err.response
+					})
+				}
+			})
+	}
+}
+

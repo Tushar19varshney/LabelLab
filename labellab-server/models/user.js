@@ -1,10 +1,8 @@
 const bcrypt = require("bcryptjs")
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
-const Image = require("./image")
 
 // Create Schema
-const UserSchema = new Schema({
+const UserSchema = new mongoose.Schema({
 	name: {
 		type: String,
 		required: true
@@ -21,7 +19,7 @@ const UserSchema = new Schema({
 		type: String,
 		required: true
 	},
-	date: {
+	created_at: {
 		type: Date,
 		default: Date.now
 	},
@@ -29,7 +27,7 @@ const UserSchema = new Schema({
 		type: String
 	},
 	project:[{
-		type: Schema.Types.ObjectId, 
+		type: mongoose.Schema.Types.ObjectId, 
 		ref: "Project"
 	}]
 	

@@ -1,16 +1,15 @@
 const mongoose = require("mongoose")
-const Schema = mongoose.Schema
 
-var LabelSchema = new Schema({
-    image:{
-		type: Schema.Types.ObjectId, 
+var LabelSchema = new mongoose.Schema({
+	image:{
+		type: mongoose.Schema.Types.ObjectId, 
 		ref: "Image"
-    },
+	},
 	label_name:{
 		type:String,
 		required:true
-    },
-    startX:{
+	},
+	startX:{
 		type:String,
 		reruired:true
 	},

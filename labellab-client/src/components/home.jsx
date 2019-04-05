@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom"
-import {Sidebar,Segment,Button,Icon,Menu,Image,Header, Container,Input} from 'semantic-ui-react'
+import {Modal,Dimmer,Segment,Button,Loader,Menu,Image,Header, Container,Input} from 'semantic-ui-react'
 import { connect } from "react-redux"
-import {setData,logout,uploadImage,fetchUser} from "../actions/index"
+import {setData,logout,uploadImage,fetchUser,initProject} from "../actions/index"
 import LabelPreview from "./labelpreview"
 import home from "./css/home.css"
 
@@ -13,7 +13,9 @@ class HomeIndex extends Component {
             visible:false,
             file:'',
             image:'',
-            max_size_error:''
+            open:false,
+            max_size_error:'',
+            project_name:''
          }
     }
     componentDidMount(){
@@ -72,52 +74,50 @@ class HomeIndex extends Component {
             visible:true
         })
     }
+    handleCreateProject=()=>{
+        this.setState({
+            open:!this.state.open,
+        })
+            }
+    handleChange=(e)=>{
+        this.setState({
+            [e.target.name]:e.target.value
+        })
+    }
+    handleProjectSubmit=()=>{
+        this.props.initProject({project_name:this.state.project_name},this.projectCallback)
+        this.close()
+    }
+    projectCallback=(id)=>{
+        this.props.history.push({
+            pathname:'/tool',
+            search:'?project_id='+id
+        })
+    }
     callback(){
 
     }
-
+    close = () => this.setState({ open: false })
     render() { 
-        const {visible} = this.state
+        const {open} = this.state
         return ( 
             <div styleName={{height:'100vh'}}>
-                <Sidebar.Pushable as={Container}>
-                    <Sidebar
-                        as={Menu}
-                        animation='overlay'
-                        icon='labeled'
-                        inverted
-                        onHide={this.handleSidebarHide}
-                        vertical
-                        visible={visible}
-                        width='3'
-                    >
-                    <Menu styleName="home.menu-back" vertical>
-                        <Menu.Item>
-                            <Header textAlign="center" as='h2' content='LabelLab' />
-                        </Menu.Item>
-                        <Menu.Item>
-                        {this.props.isfetching ? <h4>LOADING</h4> :
-                                    this.props.user && this.props.user.image ?
-                                    <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}`} size="small" />
-                                : null
-                                }
-                        </Menu.Item>
-                        <Menu.Item>
-                            <Header textAlign="center" as='h3' content={this.props.user.username} />
-                        </Menu.Item>
-                    </Menu>
-                        
-                    </Sidebar>
-
-                    <Sidebar.Pusher dimmed={visible}>
-                        <Container styleName="home.container">
+                    <Container styleName="home.container">
+                    {this.props.errors}
+                    <Dimmer active={this.props.isinitializing}>
+                        <Loader indeterminate>Preparing Files</Loader>
+                    </Dimmer>
+                    <Modal size="small" open={open} onClose={this.close}>
+                        <Modal.Content>
+                            <p>Enter Project Name:</p>
+                        </Modal.Content>
+                        <Modal.Actions>
+                            <Input name="project_name" onChange={this.handleChange} type="text" placeholder="Project name" />
+                            <Button positive onClick={this.handleProjectSubmit} content='Create Project' />
+                        </Modal.Actions>
+                    </Modal>
                         <Segment styleName="home.segment" basic>
                         <Menu styleName="home.menu">
-                            <Button onClick={this.handleShowClick}>
-                                <Button.Content >
-                                    <Icon name='bars' />
-                                </Button.Content>
-                            </Button>
                             <Menu.Menu position="right">
                                 <Menu.Item fitted styleName='home.borderless'>
                                     {this.props.isfetching ? <h4>LOADING</h4> :
@@ -135,8 +135,10 @@ class HomeIndex extends Component {
                             </Menu.Menu>
                         </Menu>
                         </Segment>
-                        <div>{this.props.errors}</div>
                         <div>{this.state.max_size_error}</div>
+                        <div>
+                            <Button onClick={this.handleCreateProject}>Create Project</Button>
+                        </div>
                         <Segment>
                             <Input onChange={this.handleImageChange} type="file" />
                             <div id="file-name-display"></div>
@@ -149,11 +151,10 @@ class HomeIndex extends Component {
                             </Link>
                             <div>
                                 <Header textAlign="center" as="h3" content="Previous Works" />
-                                <LabelPreview />
+                                {/* <LabelPreview /> */}
                             </div>
-                        </Container>
-                    </Sidebar.Pusher>
-                </Sidebar.Pushable>
+                    </Container>
+
             </div>
          );
     }
@@ -165,7 +166,8 @@ const mapStateToProps = (state) => {
         details:state.auth.details,
         user:state.user.userDetails,
         isfetching:state.user.userActions.isfetching,
-        errors:state.user.userActions.errors
+        errors:state.user.userActions.errors,
+        isinitializing: state.user.userActions.isinitializing
     }
 }
 
@@ -182,7 +184,10 @@ const mapDispatchToProps = dispatch => {
         },
         fetchUser:()=>{
             dispatch(fetchUser())
-        }
+        },
+        initProject:(data,callback)=>[
+            dispatch(initProject(data,callback))
+        ]
 
     }
 }

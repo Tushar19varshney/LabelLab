@@ -11,20 +11,30 @@ class ToolIndex extends Component {
             image:'',
             file:'',
 			label:[],
-			max_size_error:''
+			max_size_error:'',
+			image_name:''
 		 }
 	}
 	componentDidMount(){
         if(this.props.image !== ""){
+			console.log(this.props)
             this.setState({
                 image:this.props.image,
-                file:this.props.file
+				file:this.props.file,
+				image_name:this.props.image_name,
+				project_id:this.props.project_id
             },
             function(){
                 this.handleDraw()
             }
             )
-        }
+		}
+		// if(!localStorage.getItem('user')){
+        //     this.props.fetchProjectData()
+        // }
+        // else{
+        //     this.props.history.push('/login')
+        // }
     }
     handleDraw =()=>{
         initDraw(document.getElementById('canvas'),this.handleLabel,this.handleRemoveLabel)
@@ -181,7 +191,14 @@ class ToolIndex extends Component {
     }
 	handleLabel = (coordinates,label,num)=>{
 		this.setState(state=>{
-			const lab = state.label.concat({labelno:num,coordinates,label_name:label})
+			const lab = state.label.concat({
+				labelno:num,
+				startX:coordinates.startX,
+				endX:coordinates.endX,
+				startY:coordinates.startY,
+				endY:coordinates.endY,
+				label_name:label
+			})
 			return{
 				label:lab
 			}
@@ -202,15 +219,14 @@ class ToolIndex extends Component {
 	}
 
 	handleLabelSubmit = ()=>{
-        let {file,image,label} = this.state
+        let {file,image,label,project_id,image_name} = this.state
         if (file && file.size > 101200) {
             this.setState({
                 max_size_error:"max sized reached"
             })
         } else {
+
           let data = {
-            image: image,
-            format: file.type,
             label:label
           }
           this.props.postLabel(data)
@@ -219,6 +235,7 @@ class ToolIndex extends Component {
 	}
 
 	render() { 
+		const {actions} = this.props
 		return ( 
 			<div>
 				{this.props.actions.error}
@@ -228,7 +245,7 @@ class ToolIndex extends Component {
 					backgroundImage:`url(${this.state.image})`
 				}} id="canvas"></div>
                 : null}
-                <Button onClick={this.handleLabelSubmit}>Submit</Button>
+                <Button loading={actions.isposting} onClick={this.handleLabelSubmit}>Submit</Button>
 			</div>
 			
 		)
