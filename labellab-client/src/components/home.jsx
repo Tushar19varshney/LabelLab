@@ -50,11 +50,11 @@ class HomeIndex extends Component {
         let reader = new FileReader();
         let file = e.target.files[0];
         reader.onloadend = () => {
-            document.getElementById('file-name-display').innerHTML = "Filename : " + file.name
             this.setState({
                 image: reader.result,
                 file:file
             })
+            this.onSubmit(e)
         }
         reader.readAsDataURL(file)
     }
@@ -116,10 +116,10 @@ class HomeIndex extends Component {
                             <Button positive onClick={this.handleProjectSubmit} content='Create Project' />
                         </Modal.Actions>
                     </Modal>
-                        <Segment styleName="home.segment" basic>
                         <Menu styleName="home.menu">
                             <Menu.Menu position="right">
                                 <Menu.Item fitted styleName='home.borderless'>
+                                {console.log(this.props)}
                                     {this.props.isfetching ? <h4>LOADING</h4> :
                                     this.props.user && this.props.user.image ?
                                     <Image centered src={`http://localhost:7000/static/img/${this.props.user.image}?${Date.now()}`} size="mini" />
@@ -129,29 +129,29 @@ class HomeIndex extends Component {
                                 <Menu.Item >
                                     <Header textAlign="center" as='h5' content={this.props.user.username} />
                                 </Menu.Item>
+                                <div>
+                                    <input type="file" onChange={this.handleImageChange} className="file-input" id="embedpollfileinput" />
+                                    <label for="embedpollfileinput" className="ui medium primary left floated button custom-margin">
+                                        Update Profile Image
+                                    </label>
+                                </div>
                                 <Menu.Item >
-                                    <Button onClick={this.handleLogout}>Logout</Button>
+                                    <Button  onClick={this.handleLogout}>Logout</Button>
                                 </Menu.Item>
                             </Menu.Menu>
                         </Menu>
-                        </Segment>
                         <div>{this.state.max_size_error}</div>
-                        <div>
-                            <Button onClick={this.handleCreateProject}>Create Project</Button>
+                        <div className="create-project-button">
+                            <Button primary onClick={this.handleCreateProject}>Create New Project</Button>
                         </div>
-                        <Segment>
+                        {/* <Segment>
                             <Input onChange={this.handleImageChange} type="file" />
                             <div id="file-name-display"></div>
                             <Button onClick={this.onSubmit}>Upload Image</Button>
-                        </Segment>
-                            <Link to="/test">
-                                <Button>
-                                    Click to open tool
-                                </Button>
-                            </Link>
-                            <div>
-                                <Header textAlign="center" as="h3" content="Previous Works" />
-                                {/* <LabelPreview /> */}
+                        </Segment> */}
+                            <div className="previous-heading">
+                                <Header textAlign="left" as="h3" content="Previous Works" />
+                                <LabelPreview />
                             </div>
                     </Container>
 

@@ -1,53 +1,60 @@
 import React, { Component } from "react"
-import {Image,Header} from "semantic-ui-react"
-import {connect} from "react-redux"
-import {setlabelData} from "../actions/index"
+import {withRouter} from "react-router-dom"
+import { Card, Header } from "semantic-ui-react"
+import { connect } from "react-redux"
+import "./css/home.css"
+import { setProjectData } from "../actions/index"
 
 class LabelPreview extends Component {
 	constructor(props) {
 		super(props)
-		this.state = {  }
+		this.state = {}
 	}
-	componentDidMount(){
-		this.props.setLabel()
+	componentDidMount() {
+		this.props.setProject()
 	}
-	render() { 
-		return ( 
+	handleClick = id => {
+		// console.log(this.props)
+		this.props.history.push({
+			pathname:'/tool',
+		    search:'?project_id='+id
+		})
+	}
+	render() {
+		return (
 			<div>
-				{!this.props.actions.isfetching ?
-					this.props.labels && this.props.labels.images[0] && this.props.labels.images.map((image,index)=>
-						<div>
-							<Image size="medium" src={`http://localhost:7000/static/uploads/${image.image}`} />
-							<div>
-								<Header as='h4' content='Labels' />
-								{
-									image.labels && image.labels.map((label,i)=>
-										<div>
-											{label.label_name}
-										</div>
-									)
-								}
-							</div>
-						</div>
-					)
-					: <Header as='h2' content='Loading' /> }
+				{!this.props.actions.isfetching ? (
+					this.props.projects[0] &&
+					this.props.projects.map((project, index) => (
+							<Card onClick={() => this.handleClick(project._id)}>
+								<Card.Content className="card-headers" header={project.project_name} />
+								<Card.Content description="Image Labelling App" />
+								<Card.Content extra />
+							</Card>
+					))
+				) : (
+					<Header as="h2" content="Loading" />
+				)}
 			</div>
 		)
 	}
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
 	return {
-		labels:state.labels,
-		actions:state.labels.labelActions
+		projects: state.user.allProjects,
+		actions: state.user.userActions
 	}
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		setLabel : ()=>{
-			return dispatch(setlabelData())
+		setProject: () => {
+			return dispatch(setProjectData())
 		}
 	}
 }
- 
-export default connect(mapStateToProps, mapDispatchToProps)(LabelPreview)
+
+export default withRouter(connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(LabelPreview))

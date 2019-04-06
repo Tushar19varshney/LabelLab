@@ -45,27 +45,56 @@ export const initProject = (data,callback)=>{
 	}
 }
 
-export const setlabelData = ()=>{
+// export const setlabelData = ()=>{
+// 	return dispatch=>{
+// 		dispatch({
+// 			type: "SET_LABEL_DATA_REQUEST"
+// 		})
+// 		axios({ method: "GET",
+// 			url: "http://localhost:7000/api/users/setlabeldata",
+// 			headers: {
+// 				"authorization" : localStorage.getItem("user")
+// 			},
+// 			responseType: "json"})
+// 			.then((res) => {
+// 				dispatch({
+// 					type: "SET_LABEL_DATA_SUCCESS",
+// 					payload: res.data.body
+// 				})
+// 			})
+// 			.catch(err => {
+// 				if(err.response){
+// 					dispatch({
+// 						type: "SET_LABEL_DATA_FAILURE",
+// 						payload:err.response
+// 					})
+// 				}
+// 			})
+// 	}
+// }
+
+export const setProjectData = ()=>{
 	return dispatch=>{
 		dispatch({
-			type: "SET_LABEL_DATA_REQUEST"
+			type: "SET_PROJECT_REQUEST"
 		})
 		axios({ method: "GET",
-			url: "http://localhost:7000/api/users/setlabeldata",
+			url: "http://localhost:7000/api/users/projectinfo",
 			headers: {
 				"authorization" : localStorage.getItem("user")
 			},
 			responseType: "json"})
 			.then((res) => {
+				console.log(res.data)
 				dispatch({
-					type: "SET_LABEL_DATA_SUCCESS",
+					type: "SET_PROJECT_SUCCESS",
 					payload: res.data.body
 				})
 			})
 			.catch(err => {
 				if(err.response){
 					dispatch({
-						type: "SET_LABEL_DATA_FAILURE",
+						type: "SET_PROJECT_FAILURE",
 						payload:err.response
 					})
 				}

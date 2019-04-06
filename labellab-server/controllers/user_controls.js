@@ -25,7 +25,30 @@ exports.userInfo = function (req, res) {
 		})
 }
 
+exports.projectInfo = function (req, res) {
+	Project.find({
+		user:req.user._id
+	})
+		.select("project_name")
+		.populate("image",)
+		.exec(function (err, project) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			if (!project) {
+				return res.status(400).send({ success: false, msg: "project not found" })
+			}else {
+				return res.json({ success: true, msg: "project Data Found", body: project })
+			}
+		})
+}
+
 exports.imageData = function (req, res) {
+	console.log(req.body.project_id)
 	Project.find({
 		_id: req.body.project_id
 	})
@@ -39,6 +62,7 @@ exports.imageData = function (req, res) {
 					error: err
 				})
 			}
+			console.log(project)
 			if (!project) {
 				return res.status(400).send({ success: false, msg: "Project not found" })
 			}else {

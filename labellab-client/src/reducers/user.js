@@ -13,6 +13,9 @@ const initialState = {
 		username:"",
 		image:"",
 		email:""
+	},
+	allProjects:{
+
 	}
 }
 
@@ -99,6 +102,28 @@ const user = (state=initialState,action)=>{
 			userProjects:{
 				project_name:action.payload.project_name,
 				images:action.payload.image
+			}
+		}
+	case "SET_PROJECT_REQUEST":
+		return {
+			...state,
+			userActions:{
+				isfetching:true
+			}
+		}
+	case "SET_PROJECT_SUCCESS":
+		return {
+			...state,
+			userActions:{
+				isfetching:false,
+			},
+			allProjects:action.payload
+		}
+	case "SET_PROJECT_FAILURE":
+		return{
+			...state,
+			userActions:{
+				errors:action.payload
 			}
 		}
 	default:

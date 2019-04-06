@@ -8,3 +8,20 @@
     width: 100vw !important;
     height: 100% !important;
 }
+.create-project-button{
+    padding: 20px;
+}
+.previous-heading{
+    padding: 20px;
+}
+.previous-card{
+    box-shadow: 10px 10px 24px -3px rgba(0,0,0,0.75);
+    width: 25vw;
+    padding: 20px;
+}
+.previous-card:hover{
+    cursor: pointer;
+}
+.card-headers{
+    text-transform: capitalize !important;
+}

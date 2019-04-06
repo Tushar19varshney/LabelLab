@@ -6,7 +6,7 @@ class LabelDraw extends Component {
 		let canvas = document.getElementById("label-draw-parent")
 		let element= document.createElement("div")
 		element.className = "rectangle"
-		element.id = "rect"+ this.props.label._id
+		element.id = "rect"+ this.props.label._id + this.props.num
 		element.style.left = this.props.label.startX + "px"
 		element.style.top = this.props.label.startY + "px"
 		element.style.width = this.props.label.endX - this.props.label.startX + "px"
@@ -14,8 +14,8 @@ class LabelDraw extends Component {
 		canvas.appendChild(element)
 	}
 	componentWillUnmount(){
-		// let element = document.getElementById("rect "+this.props.num)
-		// if(element) element.remove()
+		let element = document.getElementById("rect"+this.props.label._id+this.props.num)
+		if(element) element.remove()
 	}
 	render() { 
 		return ( 

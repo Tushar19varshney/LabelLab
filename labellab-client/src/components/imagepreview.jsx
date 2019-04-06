@@ -12,12 +12,9 @@ class ImagePreview extends Component {
 	componentDidMount(){
 
 	}
-	componentWillMount(){
-		let rectangles = document.querySelector("rectangles")
-	}
 	render() { 
 		return ( 
-			<div>
+			<div className="image-preview-parent">
 				{this.props.image.image_url?
 					<div className="preview-image" style={{
 						backgroundImage:`url(http://localhost:7000/static/uploads/${this.props.image.image_url}?${Date.now()})`,

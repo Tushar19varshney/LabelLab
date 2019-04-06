@@ -27,6 +27,11 @@ router.get(
 	requireAuth,
 	actControllers.userInfo)
 
+router.get(
+	"/projectinfo",
+	requireAuth,
+	actControllers.projectInfo)
+
 router.post(
 	"/imageinfo",
 	requireAuth,

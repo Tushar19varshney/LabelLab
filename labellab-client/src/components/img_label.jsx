@@ -1,4 +1,5 @@
 import React, { Component } from "react"
+import {Link} from "react-router-dom"
 import ToolIndex from "./tool"
 import { connect } from "react-redux"
 import { Form,Button, Header , Image} from "semantic-ui-react";
@@ -81,9 +82,12 @@ class ImgLabel extends Component {
 						<label for="embedpollfileinput" className="ui medium primary left floated button custom-margin">
 							Add Image
 						</label>
+						<div className="home-button">
+						<Link to="/home"><Button primary floated="right">Home</Button></Link>
+						</div>
 					</div>
 					{showform ?
-                        <Form encType='multiple/form-data' onSubmit={this.handleSubmit}>
+                        <Form className="file-submit-form" encType='multiple/form-data' onSubmit={this.handleSubmit}>
                             <Form.Field>
                                 <label>Image Name</label>
                                 <input name="image_name" value={image_name} onChange={this.handleChange} placeholder='First Name' />

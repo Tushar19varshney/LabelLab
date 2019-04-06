@@ -161,6 +161,7 @@ class ToolIndex extends Component {
 						fieldParent.className= 'ui input'
 						contain.appendChild(fieldParent)
 						field = document.createElement('input')
+						field.autocomplete = "off"
 						field.id = 'label'+numRect
 						fieldParent.appendChild(field)
 						let buttonParent = document.createElement('div')
@@ -234,8 +235,8 @@ class ToolIndex extends Component {
           let data = {
 			image_id:this.props.currentimage._id,
             label:label
-          }
-          this.props.postLabel(data,()=>this.props.setImageData(this.props.project_id))
+		  }
+          this.props.postLabel(data,()=>this.props.setImageData({project_id:this.props.project_id}))
 		}
 		
 	}
@@ -252,7 +253,7 @@ class ToolIndex extends Component {
 					backgroundSize:"contain"
 				}} id="canvas"></div>
                 : null}
-                <Button floated="right" loading={actions.isposting} onClick={this.handleLabelSubmit}>Submit</Button>
+                <Button className="tool-button" floated="right" loading={actions.isposting} onClick={this.handleLabelSubmit}>Submit</Button>
 			</div>
 			
 		)
