@@ -32,7 +32,7 @@
 .tool-images{
     padding:10px;
     width: 25%;
-    border-left:1px solid black; 
+    box-shadow: 10px 10px 24px -3px rgba(0,0,0,0.75);
     height: 100vh;
 }
 .tool-parent{

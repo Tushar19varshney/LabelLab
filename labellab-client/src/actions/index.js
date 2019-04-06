@@ -132,6 +132,35 @@ export const fetchUser = ()=>{
 	}
 }
 
+export const imageInfo = (data)=>{
+	return dispatch => {
+		dispatch({
+			type: "SET_IMAGE_REQUEST"
+		})
+		axios({ method: "POST",
+			url: "http://localhost:7000/api/users/imageinfo",
+			headers:{
+				"authorization":localStorage.getItem("user")
+			},
+			data:data,
+			responseType: "json"})
+			.then(res => {
+				dispatch({
+					type: "SET_IMAGE_SUCCESS",
+					payload: res.data.body
+				})
+			})
+			.catch(err => {
+				if(err.response){
+					dispatch({
+						type: "SET_IMAGE_FAILURE",
+						payload: err.response.statusText,
+					})
+				}
+			})
+	}
+}
+
 export const userlogin = (data, callback) =>{
 	return dispatch =>{
 		dispatch({
@@ -296,3 +325,14 @@ export const submitImage = (data,callback)=>{
 	}
 }
 
+export const imagePreview = (data)=>{
+	return dispatch=>{
+		dispatch({
+			type: "IMAGE_PREVIEW_REQUEST",
+		})
+		dispatch({
+			type: "IMAGE_PREVIEW_SUCESS",
+			payload:data
+		})
+	}
+}

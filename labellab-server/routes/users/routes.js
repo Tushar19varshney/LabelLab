@@ -28,6 +28,11 @@ router.get(
 	actControllers.userInfo)
 
 router.post(
+	"/imageinfo",
+	requireAuth,
+	actControllers.imageInfo)
+
+router.post(
 	"/postlabel",
 	requireAuth,
 	actControllers.postLabel)

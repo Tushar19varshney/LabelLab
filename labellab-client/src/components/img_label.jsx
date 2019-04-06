@@ -97,9 +97,7 @@ class ImgLabel extends Component {
 				<div className="tool-images">
 					<div>
 						<Header content="Images" as="h3" />
-						{this.props.images && this.props.images[0] !== '' && this.props.images.map((image,index)=>
-							<ImageIndex image_id={image} />
-						)}
+						<ImageIndex/>
 					</div>
 				</div>
 			</div>

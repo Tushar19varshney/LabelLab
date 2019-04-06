@@ -2,9 +2,16 @@ const initialState = {
 	imageActions:{
 		isposting:false,
 		error:"",
-		isfetching:false
+		isfetching:false,
+		isloading:false
 	},
-	images:{
+	images:{	},
+	imageDetails:{	},
+	imagePreview:{
+		image_id:"",
+		image_name:"",
+		image_url:"",
+		label:""
 	}
 }
 
@@ -34,6 +41,30 @@ const user = (state=initialState,action)=>{
 				isfetching:false
 			}
 		}
+	
+	case "SET_IMAGE_REQUEST":
+		return {
+			...state,
+			imageActions:{
+				isfetching:true
+			},
+		}
+	case "SET_IMAGE_FAILURE":
+		return {
+			...state,
+			imageActions:{
+				isfetching:false,
+				error: "Something went wrong!"
+			}
+		}
+	case "SET_IMAGE_SUCCESS":
+		return {
+			...state,
+			imageDetails:action.payload,
+			imageActions:{
+				isfetching:false
+			}
+		}
 
 	case "POST_IMAGE_REQUEST":
 		return {
@@ -58,6 +89,26 @@ const user = (state=initialState,action)=>{
 				error:"Successfully submitted"
 			},
 			images:action.payload
+		}
+	case "IMAGE_PREVIEW_REQUEST":
+		return {
+			...state,
+			imageActions:{
+				isloading:true
+			}
+		}
+	case "IMAGE_PREVIEW_SUCCESS":
+		return {
+			...state,
+			imageActions:{
+				isloading:false
+			},
+			imagePreview:{
+				image_id:action.payload.image_id,
+				image_name:action.payload.image_name,
+				image_url:action.payload.image_url,
+				label:action.payload.label
+			}
 		}
 	default:
 		return state

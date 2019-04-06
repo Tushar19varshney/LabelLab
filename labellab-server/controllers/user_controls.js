@@ -29,7 +29,9 @@ exports.imageData = function (req, res) {
 	Project.find({
 		_id: req.body.project_id
 	})
-		.select("image project_name")
+		.select("project_name")
+		.populate("image","image_name image_url")
+		.populate("label","label_name startX startY endX endY")
 		.exec(function (err, project) {
 			if (err) {
 				return res.status(400).send({
@@ -74,6 +76,28 @@ exports.upload_image = function (req, res) {
 			}
 		})
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
+}
+
+exports.imageInfo = function (req, res) {
+	Image.findOne({
+		_id:req.body.image_id
+	})
+		.select("image_name image_url")
+		.populate("label","label_name startX endX startY endY")
+		.exec(function (err, image) {
+			if (err) {
+				return res.status(400).send({
+					success: false,
+					msg: "Unable to connect to database. Please try again.",
+					error: err
+				})
+			}
+			if (!image) {
+				return res.status(400).send({ success: false, msg: "image not found" })
+			}else {
+				return res.json({ success: true, msg: "image Data Found", body: image })
+			}
+		})
 }
 
 exports.postLabel = function (req,res){
