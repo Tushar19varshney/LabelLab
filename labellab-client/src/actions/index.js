@@ -73,7 +73,7 @@ export const setlabelData = ()=>{
 	}
 }
 
-export const postLabel = (data)=>{
+export const postLabel = (data,callback)=>{
 	
 	return dispatch =>{
 		
@@ -92,6 +92,7 @@ export const postLabel = (data)=>{
 					type: "POST_LABEL_SUCCESS",
 					payload:res.data
 				})
+				callback()
 			})
 			.catch(err => {
 				if(err.response){
@@ -132,34 +133,34 @@ export const fetchUser = ()=>{
 	}
 }
 
-export const imageInfo = (data)=>{
-	return dispatch => {
-		dispatch({
-			type: "SET_IMAGE_REQUEST"
-		})
-		axios({ method: "POST",
-			url: "http://localhost:7000/api/users/imageinfo",
-			headers:{
-				"authorization":localStorage.getItem("user")
-			},
-			data:data,
-			responseType: "json"})
-			.then(res => {
-				dispatch({
-					type: "SET_IMAGE_SUCCESS",
-					payload: res.data.body
-				})
-			})
-			.catch(err => {
-				if(err.response){
-					dispatch({
-						type: "SET_IMAGE_FAILURE",
-						payload: err.response.statusText,
-					})
-				}
-			})
-	}
-}
+// export const imageInfo = (data)=>{
+// 	return dispatch => {
+// 		dispatch({
+// 			type: "SET_IMAGE_REQUEST"
+// 		})
+// 		axios({ method: "POST",
+// 			url: "http://localhost:7000/api/users/imageinfo",
+// 			headers:{
+// 				"authorization":localStorage.getItem("user")
+// 			},
+// 			data:data,
+// 			responseType: "json"})
+// 			.then(res => {
+// 				dispatch({
+// 					type: "SET_IMAGE_SUCCESS",
+// 					payload: res.data.body
+// 				})
+// 			})
+// 			.catch(err => {
+// 				if(err.response){
+// 					dispatch({
+// 						type: "SET_IMAGE_FAILURE",
+// 						payload: err.response.statusText,
+// 					})
+// 				}
+// 			})
+// 	}
+// }
 
 export const userlogin = (data, callback) =>{
 	return dispatch =>{
@@ -275,9 +276,10 @@ export const setImageData = (data)=>{
 			data:data,
 			responseType: "json"})
 			.then((res) => {
+				console.log(res.data)
 				dispatch({
 					type: "SET_IMAGE_DATA_SUCCESS",
-					payload: res.data.body
+					payload: res.data.body[0]
 				})
 				dispatch({
 					type:"SET_PROJECT_NAME",
@@ -331,7 +333,7 @@ export const imagePreview = (data)=>{
 			type: "IMAGE_PREVIEW_REQUEST",
 		})
 		dispatch({
-			type: "IMAGE_PREVIEW_SUCESS",
+			type: "IMAGE_PREVIEW_SUCCESS",
 			payload:data
 		})
 	}

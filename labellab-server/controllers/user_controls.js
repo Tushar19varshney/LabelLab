@@ -30,8 +30,7 @@ exports.imageData = function (req, res) {
 		_id: req.body.project_id
 	})
 		.select("project_name")
-		.populate("image","image_name image_url")
-		.populate("label","label_name startX startY endX endY")
+		.populate({path:"image",populate:{path:"label" }})
 		.exec(function (err, project) {
 			if (err) {
 				return res.status(400).send({
@@ -103,29 +102,28 @@ exports.imageInfo = function (req, res) {
 exports.postLabel = function (req,res){
 	if (req && req.body && req.body.label) {
 		let data={
-			label:req.body.label
+			label:req.body.label,
+			image_id:req.body.image_id
 		}
+		data.label.map((label,index)=>{
+			let tmp = label
+			tmp["image"] = data.image_id
+			label = tmp
+		})
+		Label.collection.insertMany(data.label, function (err, label) {
+			if (err){
+				return res.status(400).send({ success: false, msg: "Unable To Upload Image. Please Try Again." })
+			} else {
+				Image.updateMany({ _id: data.image_id }, { $addToSet: {label: label.ops} })
+					.exec(function (err,image) {
+						console.log(image)
+						if (err) {
+							return res.status(400).send({ success: false, msg: "Cannot Append image", error: err })
+						}
+						return res.json({ success: true, msg: "Image Successfully Posted"})
+					})}
+		})
 
-		// data.label.map((label,index)=>{
-		// 	let tmp = label
-		// 	tmp["image"] = image._id
-		// 	label = tmp
-		// })
-		// Label.collection.insertMany(data.label, function (err, docs) {
-		// 	if (err){
-		// 		console.log(err)
-		// 		return res.status(400).send({ success: false, msg: "Unable To Upload Image. Please Try Again." })
-		// 	} else {
-		// 		const tmplab = Label.find({image:image._id})
-		// 		console.log(tmplab)
-		// 		// Image.updateOne({ _id: image._id }, { $addToSet: {label: image._id} })
-		// 		// 	.exec(function (err,project) {
-		// 		// 		if (err) {
-		// 		// 			return res.status(400).send({ success: false, msg: "Cannot Append image", error: err })
-		// 		// 		}
-		// 		// return res.json({ success: true, msg: "Image Successfully Posted", body: image })
-		// 	}
-		//   })
 	} else res.status(400).send({ success: false, msg: "Invalid Data" })
 }
 

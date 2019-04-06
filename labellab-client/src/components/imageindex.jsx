@@ -9,9 +9,9 @@ class ImageIndex extends Component {
 		super(props)
 		this.state = {  }
 	}
-	handleClick=(data)=>{
+	handleClick = (data) => {
 		if(data){
-		this.props.imagePreview(data)
+			this.props.imagePreview(data)
 		}
 	}
 	render() { 

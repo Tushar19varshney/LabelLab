@@ -3,7 +3,8 @@ const initialState = {
 		isposting:false,
 		error:"",
 		isfetching:false,
-		isloading:false
+		isloading:false,
+		ispreview:false
 	},
 	images:{	},
 	imageDetails:{	},
@@ -12,7 +13,8 @@ const initialState = {
 		image_name:"",
 		image_url:"",
 		label:""
-	}
+	},
+	currentImage:""
 }
 
 const user = (state=initialState,action)=>{
@@ -88,7 +90,7 @@ const user = (state=initialState,action)=>{
 				isposting:false,
 				error:"Successfully submitted"
 			},
-			images:action.payload
+			currentImage:action.payload
 		}
 	case "IMAGE_PREVIEW_REQUEST":
 		return {
@@ -101,10 +103,11 @@ const user = (state=initialState,action)=>{
 		return {
 			...state,
 			imageActions:{
-				isloading:false
+				isloading:false,
+				ispreview:true
 			},
 			imagePreview:{
-				image_id:action.payload.image_id,
+				image_id:action.payload._id,
 				image_name:action.payload.image_name,
 				image_url:action.payload.image_url,
 				label:action.payload.label

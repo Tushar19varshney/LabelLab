@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import {connect} from "react-redux"
-import {postLabel} from "../actions/index"
+import {postLabel,setImageData} from "../actions/index"
 import {Button} from "semantic-ui-react"
 import "./css/img_label.css"
 
@@ -117,7 +117,6 @@ class ToolIndex extends Component {
 						tmp_width = element.style.width
 						element = null;
 						canvas.style.cursor = "default";
-						console.log("finsihed.");
 						let contain = document.createElement('div')
 						contain.className = 'label-container'
 						contain.id = 'label-container'+numRect
@@ -158,20 +157,27 @@ class ToolIndex extends Component {
 							coordinates.endY = temp
 						}
 						canvas.appendChild(contain)
+						let fieldParent = document.createElement('div')
+						fieldParent.className= 'ui input'
+						contain.appendChild(fieldParent)
 						field = document.createElement('input')
-						field.className = 'label-input'
 						field.id = 'label'+numRect
-						contain.appendChild(field)
+						fieldParent.appendChild(field)
+						let buttonParent = document.createElement('div')
+						buttonParent.className = "button-parent"
+						contain.appendChild(buttonParent)
 						let okButton = document.createElement('button')
+						okButton.className="ui green button"
 						okButton.id = 'okButton'+numRect
 						okButton.innerHTML = "OK"
 						okButton.onclick = okClick
-						contain.appendChild(okButton)
+						buttonParent.appendChild(okButton)
 						let canButton = document.createElement('button')
+						canButton.className = "ui red button"
 						canButton.id = 'canButton'+numRect
 						canButton.innerHTML = "DESELECT"
 						canButton.onclick = canClick
-						contain.appendChild(canButton)
+						buttonParent.appendChild(canButton)
 
 					} else {
 						console.log("begun.");
@@ -219,17 +225,17 @@ class ToolIndex extends Component {
 	}
 
 	handleLabelSubmit = ()=>{
-        let {file,image,label,project_id,image_name} = this.state
+        let {file,label} = this.state
         if (file && file.size > 101200) {
             this.setState({
                 max_size_error:"max sized reached"
             })
         } else {
-
           let data = {
+			image_id:this.props.currentimage._id,
             label:label
           }
-          this.props.postLabel(data)
+          this.props.postLabel(data,()=>this.props.setImageData(this.props.project_id))
 		}
 		
 	}
@@ -237,15 +243,16 @@ class ToolIndex extends Component {
 	render() { 
 		const {actions} = this.props
 		return ( 
-			<div>
+			<div className="tool-parent">
 				{this.props.actions.error}
 				{this.state.max_size_error}
 				{this.state.image ?
 				<div style={{
-					backgroundImage:`url(${this.state.image})`
+					backgroundImage:`url(${this.state.image})`,
+					backgroundSize:"contain"
 				}} id="canvas"></div>
                 : null}
-                <Button loading={actions.isposting} onClick={this.handleLabelSubmit}>Submit</Button>
+                <Button floated="right" loading={actions.isposting} onClick={this.handleLabelSubmit}>Submit</Button>
 			</div>
 			
 		)
@@ -253,15 +260,19 @@ class ToolIndex extends Component {
 }
 const mapStateToProps = (state) => {
 	return {
-		actions: state.labels.labelActions
+		actions: state.labels.labelActions,
+		currentimage:state.images.currentImage
 	}
 
 }
 
 const mapDispatchToProps = dispatch => {
 	return {
-		postLabel : (data)=>{
-			return dispatch(postLabel(data))
+		postLabel : (data,callback)=>{
+			return dispatch(postLabel(data,callback))
+		},
+		setImageData: (data)=>{
+			return dispatch(setImageData(data))
 		}
 	}
 }
