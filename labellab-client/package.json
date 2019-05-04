@@ -4,9 +4,11 @@
   "private": true,
   "dependencies": {
     "axios": "^0.18.0",
+    "chart.js": "^2.8.0",
     "fs": "0.0.1-security",
     "jwt-decode": "^2.2.0",
     "react": "^16.8.4",
+    "react-chartjs-2": "^2.7.6",
     "react-dom": "^16.8.4",
     "react-dropzone": "^10.0.6",
     "react-image-crop": "^6.0.18",

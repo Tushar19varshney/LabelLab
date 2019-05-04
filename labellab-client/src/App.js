@@ -10,6 +10,7 @@ import Home from "./components/home"
 import Register from "./components/register"
 import ImgLabel from "./components/img_label"
 import Tool from "./components/img_label"
+import Chart from "./components/tmp"
 
 export default class App extends Component {
 	constructor(props){
@@ -29,7 +30,8 @@ export default class App extends Component {
 						<Route path="/home" component={Home} />
 						<Route path="/register" component={Register} />
 						<Route path="/test" component={ImgLabel} />
-						<Route exact path="/tool" component={Tool} />
+						{/* <Route exact path="/tool" component={Tool} /> */}
+						<Route exact path="/chart" component={Chart} />
 					</Provider>
 				</Switch>
 			</BrowserRouter>
