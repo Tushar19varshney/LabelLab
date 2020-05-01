@@ -18,14 +18,17 @@
     "redux": "^4.0.1",
     "redux-router": "^2.1.2",
     "redux-thunk": "^2.3.0",
-    "semantic-ui-react": "^0.86.0"
+    "semantic-ui-react": "^0.86.0",
+    "snyk": "^1.316.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint src/ --fix"
+    "lint": "eslint src/ --fix",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "browserslist": [
     ">0.2%",
@@ -37,5 +40,6 @@
     "babel-eslint": "9.0.0",
     "eslint-config-prettier": "^4.1.0",
     "eslint-plugin-prettier": "^3.0.1"
-  }
+  },
+  "snyk": true
 }
